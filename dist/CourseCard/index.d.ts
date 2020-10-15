@@ -1,9 +1,9 @@
 import * as React from "react";
 declare type SectionType = {
     section: string;
-    type: string;
+    type?: string;
     schedule: string;
-    time: Array<number>;
+    time: Array<number> | string;
     location: string;
 };
 declare type SectionsType = Array<SectionType>;

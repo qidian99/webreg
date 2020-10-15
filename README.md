@@ -1,8 +1,15 @@
-# npm-react-typescript-template
+# WebReg Components
+UI Components for course enrollment system, WebReg, of UCSD.
 
-A template for publishing a React + TypeScript package to npm
+## Components
+* Calendar
+* Course Card (List view)
+* Course result (Search View)
+* Course Detail Page
+* Course card popup (Calendar View)
+* Small course card (In Calendar)
 
-## How to use
+## How to deploy
 
 Fork this repo, clone it to your local computer, and edit the `package.json` along with every other required file to match your project.
 Write the code for your package in TypeScript and Sass, compile it, and publish it to [npm](https://npmjs.com).

@@ -91,9 +91,9 @@ Meetings:
 
 type SectionType = {
   section: string;
-  type: string;
+  type?: string;
   schedule: string;
-  time: Array<number>;
+  time: Array<number> | string;
   location: string;
 };
 
@@ -112,12 +112,13 @@ const useStyles = makeStyles((theme) => ({
   root: {
     padding: theme.spacing(0),
     borderRadius: 12,
+    maxWidth: 600,
   },
   header: {
     backgroundColor: "#BAE1FF",
-    "& > *:first-child": {
-      fontWeight: 800,
-    },
+  },
+  title: {
+    fontWeight: 800,
   },
   avatarContainer: {
     padding: theme.spacing(1.5),
@@ -133,6 +134,9 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "space-between",
     marginBottom: theme.spacing(1),
+    "& > .MuiTypography-root": {
+      color: "#034263",
+    },
   },
   sectionContainer: {
     marginBottom: theme.spacing(1),
@@ -158,8 +162,13 @@ const useStyles = makeStyles((theme) => ({
       },
     },
   },
+  classType: {
+    // marginLeft: theme.spacing(1),
+  },
+  classLocation: {
+    // fontSize: "0.8rem",
+  },
 }));
-
 
 // const ActionButton = withStyles({
 //   root: {
@@ -206,7 +215,11 @@ export const CourseCard: React.FC<CourseCardProps> = ({
             </Avatar>
           </Grid>
           <Grid item xs container direction="column" justify="center">
-            <Typography variant="h6" color="textPrimary">
+            <Typography
+              variant="h6"
+              color="textPrimary"
+              className={classes.title}
+            >
               {title}
             </Typography>
             <Typography variant="h6" color="textSecondary">
@@ -218,8 +231,8 @@ export const CourseCard: React.FC<CourseCardProps> = ({
       <CardContent>
         <Box className={classes.professor}>
           <Typography>{professor}</Typography>
-          <Typography>
-            <Typography display="inline" color="textSecondary">
+          <Typography component="span">
+            <Typography component="span" color="textSecondary">
               Section ID{" "}
             </Typography>
             {sectionId}
@@ -231,35 +244,67 @@ export const CourseCard: React.FC<CourseCardProps> = ({
           alignItems="center"
           className={classes.sectionContainer}
         >
-          {sectionInfo.map(({ section, type, schedule, time, location }) => (
-            <React.Fragment>
-              <Grid xs={1} item>
-                {section}
-              </Grid>
-              <Grid xs={1} item>
-                {type}
-              </Grid>
-              <Grid xs={3} item>
-                {Array.from(Array(7).keys()).map((index) => (
-                  <Typography
-                    component="span"
-                    color={
-                      time.includes(index) ? "textPrimary" : "textSecondary"
-                    }
-                    style={{ marginLeft: 1 }}
-                  >
-                    {timeStringMap[index]}
-                  </Typography>
-                ))}
-              </Grid>
-              <Grid xs={4} item>
-                {schedule}
-              </Grid>
-              <Grid xs={3} item>
-                {location}
-              </Grid>
-            </React.Fragment>
-          ))}
+          {sectionInfo.map(
+            ({ section, type, schedule, time, location }, idx) => (
+              <React.Fragment key={`section-${idx}`}>
+                <Grid sm={1} xs={1} item>
+                  <Typography color="textSecondary">{section}</Typography>
+                </Grid>
+                <Grid
+                  sm={1}
+                  xs={1}
+                  item
+                  className={classes.classType}
+                  container
+                  justify="center"
+                >
+                  {type}
+                </Grid>
+                <Grid sm={3} xs={3} item container justify="center">
+                  {type &&
+                    Array.from(Array(7).keys()).map((index) => (
+                      <Typography
+                        key={`date-${index}`}
+                        component="span"
+                        style={{
+                          marginLeft: 1,
+                          color: (time as Array<number>).includes(index)
+                            ? "#034263"
+                            : "#EAEAEA",
+                        }}
+                      >
+                        {timeStringMap[index]}
+                      </Typography>
+                    ))}
+
+                  {!type && (
+                    <Typography
+                      component="span"
+                      style={{
+                        marginLeft: 1,
+                        color: "#034263",
+                      }}
+                    >
+                      {time}
+                    </Typography>
+                  )}
+                </Grid>
+                <Grid sm={4} xs={4} item container justify="center">
+                  {schedule}
+                </Grid>
+                <Grid
+                  sm={3}
+                  xs={3}
+                  item
+                  container
+                  justify="flex-end"
+                  className={classes.classLocation}
+                >
+                  {location}
+                </Grid>
+              </React.Fragment>
+            )
+          )}
         </Grid>
         <Box className={classes.actions}>
           <ToggleButtonGroup
@@ -269,10 +314,18 @@ export const CourseCard: React.FC<CourseCardProps> = ({
             aria-label="grading options"
             className={classes.toggleButton}
           >
-            <ToggleButton value="pnp" aria-label="pass non-pass">
+            <ToggleButton
+              disabled={gradingOption === "pnp"}
+              value="pnp"
+              aria-label="pass non-pass"
+            >
               P/NP
             </ToggleButton>
-            <ToggleButton value="letter" aria-label="letter grade">
+            <ToggleButton
+              disabled={gradingOption === "letter"}
+              value="letter"
+              aria-label="letter grade"
+            >
               Letter
             </ToggleButton>
           </ToggleButtonGroup>
@@ -306,9 +359,8 @@ CourseCard.defaultProps = {
     },
     {
       section: "FINAL",
-      type: "LE",
       schedule: "3:00p - 5:59p",
-      time: [1],
+      time: "Mon 12/13",
       location: "TBA",
     },
   ],
