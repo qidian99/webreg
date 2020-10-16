@@ -306,7 +306,12 @@ export const CourseCard: React.FC<CourseCardProps> = ({
   };
 
   let TitleFragment = (
-    <Typography variant="h6" color="textPrimary" className={classes.title}>
+    <Typography
+      align="left"
+      variant="h6"
+      color="textPrimary"
+      className={classes.title}
+    >
       {title}
     </Typography>
   );

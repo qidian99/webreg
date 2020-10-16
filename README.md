@@ -25,7 +25,7 @@ UI Components for course enrollment system, WebReg, of UCSD.
 * Added callback functions in CourseCard. 
 
 
-### v1.0.3
+### v1.0.3, v1.0.4
 * Fix title text alignment issue encountered in sandbox.
 
 

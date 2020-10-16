@@ -190,7 +190,7 @@ var CourseCard = function (_a) {
         onOptionChange(newOption);
         event.preventDefault();
     };
-    var TitleFragment = (React.createElement(core.Typography, { variant: "h6", color: "textPrimary", className: classes.title }, title));
+    var TitleFragment = (React.createElement(core.Typography, { align: "left", variant: "h6", color: "textPrimary", className: classes.title }, title));
     if (display === DisplayOption.List && status) {
         TitleFragment = (React.createElement(core.Box, { className: classes.status },
             React.createElement(core.Typography, { align: "left", variant: "h6", color: "textPrimary", className: classes.title }, title),
