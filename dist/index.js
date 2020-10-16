@@ -38,16 +38,30 @@ var DisplayOption;
     DisplayOption["Card"] = "card";
     DisplayOption["List"] = "list";
 })(DisplayOption || (DisplayOption = {}));
+var StatusOption;
+(function (StatusOption) {
+    StatusOption["Enrolled"] = "enrolled";
+    StatusOption["Waitlist"] = "waitlist";
+    StatusOption["Planned"] = "planned";
+})(StatusOption || (StatusOption = {}));
 var useStyles = styles.makeStyles(function (theme) { return ({
     root: function (_a) {
-        var display = _a.display;
+        var display = _a.display, status = _a.status;
         var style = {
             padding: theme.spacing(0),
             borderRadius: 12,
             maxWidth: 600,
         };
         if (display === DisplayOption.List) {
-            style.border = "2px solid #034263";
+            var borderType = "solid";
+            var color = "#034263";
+            if (status === StatusOption.Waitlist) {
+                borderType = "dashed";
+            }
+            if (status === StatusOption.Planned) {
+                color = "rgba(97,97,97,0.5)";
+            }
+            style.border = "3px " + borderType + " " + color;
         }
         return style;
     },
@@ -138,6 +152,22 @@ var useStyles = styles.makeStyles(function (theme) { return ({
         color: "rgba(3,66,99,0.3)",
         fontSize: "2.5rem",
     },
+    status: {
+        display: "flex",
+        justifyContent: "space-between",
+    },
+    enrolled: {
+        color: "#034263",
+        marginRight: theme.spacing(1),
+    },
+    waitlist: {
+        color: "#D27070",
+        marginRight: theme.spacing(1),
+    },
+    planned: {
+        color: "#979797",
+        marginRight: theme.spacing(1),
+    },
 }); });
 // const ActionButton = withStyles({
 //   root: {
@@ -151,8 +181,8 @@ var useStyles = styles.makeStyles(function (theme) { return ({
 //   },
 // })(Button);
 var CourseCard = function (_a) {
-    var title = _a.title, description = _a.description, units = _a.units, professor = _a.professor, sectionId = _a.sectionId, sectionInfo = _a.sectionInfo, action = _a.action, onOptionChange = _a.onOptionChange, onActionClick = _a.onActionClick, onRefresh = _a.onRefresh, onDelete = _a.onDelete, onAdd = _a.onAdd, display = _a.display;
-    var props = { display: display };
+    var title = _a.title, description = _a.description, units = _a.units, professor = _a.professor, sectionId = _a.sectionId, sectionInfo = _a.sectionInfo, action = _a.action, onOptionChange = _a.onOptionChange, onActionClick = _a.onActionClick, onRefresh = _a.onRefresh, onDelete = _a.onDelete, onAdd = _a.onAdd, display = _a.display, status = _a.status, statusText = _a.statusText;
+    var props = { display: display, status: status };
     var classes = useStyles(props);
     var _b = React.useState("pnp"), gradingOption = _b[0], setGradingOption = _b[1];
     var handleAlignment = function (event, newOption) {
@@ -160,13 +190,19 @@ var CourseCard = function (_a) {
         onOptionChange(newOption);
         event.preventDefault();
     };
+    var TitleFragment = (React.createElement(core.Typography, { variant: "h6", color: "textPrimary", className: classes.title }, title));
+    if (display === DisplayOption.List && status) {
+        TitleFragment = (React.createElement(core.Box, { className: classes.status },
+            React.createElement(core.Typography, { variant: "h6", color: "textPrimary", className: classes.title }, title),
+            React.createElement(core.Typography, { component: "span", className: classes[status] }, statusText)));
+    }
     var CourseFragment = (React.createElement(React.Fragment, null,
         React.createElement(core.CardContent, { className: classes.header },
             React.createElement(core.Grid, { container: true },
                 React.createElement(core.Grid, { item: true, className: classes.avatarContainer },
                     React.createElement(core.Avatar, { "aria-label": "recipe", className: classes.avatar }, units)),
                 React.createElement(core.Grid, { item: true, xs: true, container: true, direction: "column", justify: "flex-start" },
-                    React.createElement(core.Typography, { variant: "h6", color: "textPrimary", className: classes.title }, title),
+                    TitleFragment,
                     React.createElement(core.Typography, { variant: "h6", color: "textSecondary" }, description)))),
         React.createElement(core.CardContent, null,
             React.createElement(core.Box, { className: classes.professor },
@@ -258,6 +294,8 @@ CourseCard.defaultProps = {
     onDelete: function () { },
     onAdd: function () { },
     display: DisplayOption.Card,
+    status: StatusOption.Enrolled,
+    statusText: 'Enrolled - Letter',
 };
 
 exports.CourseCard = CourseCard;

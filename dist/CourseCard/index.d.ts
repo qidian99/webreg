@@ -11,6 +11,11 @@ declare enum DisplayOption {
     Card = "card",
     List = "list"
 }
+declare enum StatusOption {
+    Enrolled = "enrolled",
+    Waitlist = "waitlist",
+    Planned = "planned"
+}
 interface CourseCardProps {
     title: string;
     description: string;
@@ -25,6 +30,8 @@ interface CourseCardProps {
     onDelete?: () => void;
     onAdd?: () => void;
     display: DisplayOption;
+    status: StatusOption;
+    statusText: string;
 }
 export declare const CourseCard: React.FC<CourseCardProps>;
 export {};

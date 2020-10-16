@@ -108,6 +108,12 @@ enum DisplayOption {
   Card = "card",
   List = "list",
 }
+
+enum StatusOption {
+  Enrolled = "enrolled",
+  Waitlist = "waitlist",
+  Planned = "planned",
+}
 interface CourseCardProps {
   title: string;
   description: string;
@@ -122,21 +128,32 @@ interface CourseCardProps {
   onDelete?: () => void;
   onAdd?: () => void;
   display: DisplayOption;
+  status: StatusOption;
+  statusText: string;
 }
 
 interface ThemeProps {
   display: DisplayOption;
+  status?: StatusOption;
 }
 
 const useStyles = makeStyles((theme) => ({
-  root: ({ display }: ThemeProps) => {
+  root: ({ display, status }: ThemeProps) => {
     const style: any = {
       padding: theme.spacing(0),
       borderRadius: 12,
       maxWidth: 600,
     };
     if (display === DisplayOption.List) {
-      style.border = "2px solid #034263";
+      let borderType: string = "solid";
+      let color: string = "#034263";
+      if (status === StatusOption.Waitlist) {
+        borderType = "dashed";
+      }
+      if (status === StatusOption.Planned) {
+        color = "rgba(97,97,97,0.5)";
+      }
+      style.border = `3px ${borderType} ${color}`;
     }
     return style;
   },
@@ -225,6 +242,22 @@ const useStyles = makeStyles((theme) => ({
     color: "rgba(3,66,99,0.3)",
     fontSize: "2.5rem",
   },
+  status: {
+    display: "flex",
+    justifyContent: "space-between",
+  },
+  enrolled: {
+    color: "#034263",
+    marginRight: theme.spacing(1),
+  },
+  waitlist: {
+    color: "#D27070",
+    marginRight: theme.spacing(1),
+  },
+  planned: {
+    color: "#979797",
+    marginRight: theme.spacing(1),
+  },
 }));
 
 // const ActionButton = withStyles({
@@ -253,8 +286,10 @@ export const CourseCard: React.FC<CourseCardProps> = ({
   onDelete,
   onAdd,
   display,
+  status,
+  statusText,
 }) => {
-  const props = { display };
+  const props = { display, status };
   const classes = useStyles(props);
 
   const [gradingOption, setGradingOption] = React.useState<string | null>(
@@ -270,6 +305,25 @@ export const CourseCard: React.FC<CourseCardProps> = ({
     event.preventDefault();
   };
 
+  let TitleFragment = (
+    <Typography variant="h6" color="textPrimary" className={classes.title}>
+      {title}
+    </Typography>
+  );
+
+  if (display === DisplayOption.List && status) {
+    TitleFragment = (
+      <Box className={classes.status}>
+        <Typography variant="h6" color="textPrimary" className={classes.title}>
+          {title}
+        </Typography>
+        <Typography component="span" className={classes[status]}>
+          {statusText}
+        </Typography>
+      </Box>
+    );
+  }
+
   const CourseFragment = (
     <React.Fragment>
       <CardContent className={classes.header}>
@@ -280,13 +334,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({
             </Avatar>
           </Grid>
           <Grid item xs container direction="column" justify="flex-start">
-            <Typography
-              variant="h6"
-              color="textPrimary"
-              className={classes.title}
-            >
-              {title}
-            </Typography>
+            {TitleFragment}
             <Typography variant="h6" color="textSecondary">
               {description}
             </Typography>
@@ -434,9 +482,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({
             <Grid item xs>
               {ContentFragment}
             </Grid>
-            <Grid item>
-              {ListActions}
-            </Grid>
+            <Grid item>{ListActions}</Grid>
           </Grid>
         </Card>
       );
@@ -481,4 +527,6 @@ CourseCard.defaultProps = {
   onDelete: () => {},
   onAdd: () => {},
   display: DisplayOption.Card,
+  status: StatusOption.Enrolled,
+  statusText: 'Enrolled - Letter',
 };
