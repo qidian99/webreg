@@ -9,6 +9,21 @@ UI Components for course enrollment system, WebReg, of UCSD.
 * Course card popup (Calendar View)
 * Small course card (In Calendar)
 
+## Tag history
+
+### v1.0.0
+* First draft of CourseCard.
+
+### v1.0.1
+* Updated grid to be more fluid in CourseCard. 
+* Fixed layout issues in CourseCard.
+
+### v1.0.2
+* Added display options in CourseCard.
+* Added status and status text for CourseCard. 
+* Fragmentize components in CourseCard. 
+* Added callback functions in CourseCard. 
+
 ## How to deploy
 
 Fork this repo, clone it to your local computer, and edit the `package.json` along with every other required file to match your project.
