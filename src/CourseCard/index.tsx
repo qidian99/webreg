@@ -314,7 +314,12 @@ export const CourseCard: React.FC<CourseCardProps> = ({
   if (display === DisplayOption.List && status) {
     TitleFragment = (
       <Box className={classes.status}>
-        <Typography variant="h6" color="textPrimary" className={classes.title}>
+        <Typography
+          align="left"
+          variant="h6"
+          color="textPrimary"
+          className={classes.title}
+        >
           {title}
         </Typography>
         <Typography component="span" className={classes[status]}>
@@ -333,9 +338,9 @@ export const CourseCard: React.FC<CourseCardProps> = ({
               {units}
             </Avatar>
           </Grid>
-          <Grid item xs container direction="column" justify="flex-start">
+          <Grid item xs container direction="column">
             {TitleFragment}
-            <Typography variant="h6" color="textSecondary">
+            <Typography align="left" variant="h6" color="textSecondary">
               {description}
             </Typography>
           </Grid>

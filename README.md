@@ -24,6 +24,14 @@ UI Components for course enrollment system, WebReg, of UCSD.
 * Fragmentize components in CourseCard. 
 * Added callback functions in CourseCard. 
 
+
+### v1.0.3
+* Fix title text alignment issue encountered in sandbox.
+
+
+## Demo
+https://codesandbox.io/s/webreg-ui-demo-zz1nw?file=/src/App.js
+
 ## How to deploy
 
 Fork this repo, clone it to your local computer, and edit the `package.json` along with every other required file to match your project.
