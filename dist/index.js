@@ -23,20 +23,45 @@ function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'defau
 var React = require('react');
 var core = require('@material-ui/core');
 var styles = require('@material-ui/core/styles');
+var RefreshIcon = _interopDefault(require('@material-ui/icons/Cached'));
+var DeleteIcon = _interopDefault(require('@material-ui/icons/DeleteForever'));
+var AddIcon = _interopDefault(require('@material-ui/icons/AddCircle'));
 var ToggleButton = _interopDefault(require('@material-ui/lab/ToggleButton'));
 var ToggleButtonGroup = _interopDefault(require('@material-ui/lab/ToggleButtonGroup'));
+var IconButton = _interopDefault(require('@material-ui/core/IconButton'));
 
 var timeStringMap = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 //# sourceMappingURL=index.js.map
 
+var DisplayOption;
+(function (DisplayOption) {
+    DisplayOption["Card"] = "card";
+    DisplayOption["List"] = "list";
+})(DisplayOption || (DisplayOption = {}));
 var useStyles = styles.makeStyles(function (theme) { return ({
-    root: {
-        padding: theme.spacing(0),
-        borderRadius: 12,
-        maxWidth: 600,
+    root: function (_a) {
+        var display = _a.display;
+        var style = {
+            padding: theme.spacing(0),
+            borderRadius: 12,
+            maxWidth: 600,
+        };
+        if (display === DisplayOption.List) {
+            style.border = "2px solid #034263";
+        }
+        return style;
     },
-    header: {
-        backgroundColor: "#BAE1FF",
+    header: function (_a) {
+        var display = _a.display;
+        if (display === DisplayOption.Card) {
+            return {
+                backgroundColor: "#BAE1FF",
+            };
+        }
+        return {
+            padding: theme.spacing(0),
+            paddingTop: theme.spacing(1),
+        };
     },
     title: {
         fontWeight: 800,
@@ -46,10 +71,13 @@ var useStyles = styles.makeStyles(function (theme) { return ({
         display: "flex",
         alignItems: "center",
     },
-    avatar: {
-        backgroundColor: "#EAEAEA",
-        color: "#000",
-        marginRight: theme.spacing(2),
+    avatar: function (_a) {
+        var display = _a.display;
+        return ({
+            backgroundColor: "#EAEAEA",
+            color: "#000",
+            marginRight: display === DisplayOption.Card ? theme.spacing(2) : theme.spacing(0),
+        });
     },
     professor: {
         display: "flex",
@@ -60,13 +88,14 @@ var useStyles = styles.makeStyles(function (theme) { return ({
         },
     },
     sectionContainer: {
-        marginBottom: theme.spacing(1),
+    // marginBottom: theme.spacing(1),
     },
     actions: {
         display: "flex",
         justifyContent: "space-between",
     },
     actionButton: {
+        minWidth: 160,
         borderRadius: theme.spacing(0.5),
         backgroundColor: "#034263",
         color: "#FFF",
@@ -75,6 +104,9 @@ var useStyles = styles.makeStyles(function (theme) { return ({
         },
     },
     toggleButton: {
+        "& .MuiToggleButton-root": {
+            minWidth: 80,
+        },
         "& .Mui-selected": {
             backgroundColor: "#034263",
             color: "#FFF",
@@ -89,6 +121,23 @@ var useStyles = styles.makeStyles(function (theme) { return ({
     classLocation: {
     // fontSize: "0.8rem",
     },
+    listActions: function () { return ({
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-around",
+        height: "100%",
+        borderLeft: "1px solid rgba(3,66,99,0.1)",
+        paddingLeft: theme.spacing(1.5),
+        paddingRight: theme.spacing(1.5),
+    }); },
+    icon: {
+        color: "#034263",
+        fontSize: "2.5rem",
+    },
+    addIcon: {
+        color: "rgba(3,66,99,0.3)",
+        fontSize: "2.5rem",
+    },
 }); });
 // const ActionButton = withStyles({
 //   root: {
@@ -102,20 +151,21 @@ var useStyles = styles.makeStyles(function (theme) { return ({
 //   },
 // })(Button);
 var CourseCard = function (_a) {
-    var title = _a.title, description = _a.description, units = _a.units, professor = _a.professor, sectionId = _a.sectionId, sectionInfo = _a.sectionInfo;
-    var props = {};
+    var title = _a.title, description = _a.description, units = _a.units, professor = _a.professor, sectionId = _a.sectionId, sectionInfo = _a.sectionInfo, action = _a.action, onOptionChange = _a.onOptionChange, onActionClick = _a.onActionClick, onRefresh = _a.onRefresh, onDelete = _a.onDelete, onAdd = _a.onAdd, display = _a.display;
+    var props = { display: display };
     var classes = useStyles(props);
     var _b = React.useState("pnp"), gradingOption = _b[0], setGradingOption = _b[1];
     var handleAlignment = function (event, newOption) {
         setGradingOption(newOption);
+        onOptionChange(newOption);
         event.preventDefault();
     };
-    return (React.createElement(core.Card, { className: classes.root },
+    var CourseFragment = (React.createElement(React.Fragment, null,
         React.createElement(core.CardContent, { className: classes.header },
             React.createElement(core.Grid, { container: true },
                 React.createElement(core.Grid, { item: true, className: classes.avatarContainer },
                     React.createElement(core.Avatar, { "aria-label": "recipe", className: classes.avatar }, units)),
-                React.createElement(core.Grid, { item: true, xs: true, container: true, direction: "column", justify: "center" },
+                React.createElement(core.Grid, { item: true, xs: true, container: true, direction: "column", justify: "flex-start" },
                     React.createElement(core.Typography, { variant: "h6", color: "textPrimary", className: classes.title }, title),
                     React.createElement(core.Typography, { variant: "h6", color: "textSecondary" }, description)))),
         React.createElement(core.CardContent, null,
@@ -146,12 +196,32 @@ var CourseCard = function (_a) {
                             } }, time))),
                     React.createElement(core.Grid, { sm: 4, xs: 4, item: true, container: true, justify: "center" }, schedule),
                     React.createElement(core.Grid, { sm: 3, xs: 3, item: true, container: true, justify: "flex-end", className: classes.classLocation }, location)));
-            })),
-            React.createElement(core.Box, { className: classes.actions },
-                React.createElement(ToggleButtonGroup, { value: gradingOption, exclusive: true, onChange: handleAlignment, "aria-label": "grading options", className: classes.toggleButton },
-                    React.createElement(ToggleButton, { disabled: gradingOption === "pnp", value: "pnp", "aria-label": "pass non-pass" }, "P/NP"),
-                    React.createElement(ToggleButton, { disabled: gradingOption === "letter", value: "letter", "aria-label": "letter grade" }, "Letter")),
-                React.createElement(core.Button, { className: classes.actionButton }, "Drop Course")))));
+            })))));
+    var ContentFragment = (React.createElement(React.Fragment, null,
+        CourseFragment,
+        display === DisplayOption.Card && (React.createElement(core.CardContent, { className: classes.actions },
+            React.createElement(ToggleButtonGroup, { value: gradingOption, exclusive: true, onChange: handleAlignment, "aria-label": "grading options", className: classes.toggleButton },
+                React.createElement(ToggleButton, { disabled: gradingOption === "pnp", value: "pnp", "aria-label": "pass non-pass" }, "P/NP"),
+                React.createElement(ToggleButton, { disabled: gradingOption === "letter", value: "letter", "aria-label": "letter grade" }, "Letter")),
+            React.createElement(core.Button, { onClick: onActionClick, className: classes.actionButton }, action)))));
+    var ListActions = (React.createElement(React.Fragment, null,
+        React.createElement(core.Box, { className: classes.listActions },
+            React.createElement(IconButton, { onClick: onRefresh },
+                React.createElement(RefreshIcon, { className: classes.icon })),
+            React.createElement(IconButton, { onClick: onDelete },
+                React.createElement(DeleteIcon, { className: classes.icon })),
+            React.createElement(IconButton, { onClick: onAdd },
+                React.createElement(AddIcon, { className: classes.addIcon })))));
+    switch (display) {
+        case DisplayOption.List:
+            return (React.createElement(core.Card, { className: classes.root },
+                React.createElement(core.Grid, { container: true },
+                    React.createElement(core.Grid, { item: true, xs: true }, ContentFragment),
+                    React.createElement(core.Grid, { item: true }, ListActions))));
+        case DisplayOption.Card:
+        default:
+            return React.createElement(core.Card, { className: classes.root }, ContentFragment);
+    }
 };
 CourseCard.defaultProps = {
     title: "CSE 100",
@@ -181,6 +251,13 @@ CourseCard.defaultProps = {
             location: "TBA",
         },
     ],
+    action: "Drop Course",
+    onOptionChange: function () { },
+    onActionClick: function () { },
+    onRefresh: function () { },
+    onDelete: function () { },
+    onAdd: function () { },
+    display: DisplayOption.Card,
 };
 
 exports.CourseCard = CourseCard;

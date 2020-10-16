@@ -11,8 +11,13 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import { timeStringMap } from "../util";
 
+import RefreshIcon from "@material-ui/icons/Cached";
+import DeleteIcon from "@material-ui/icons/DeleteForever";
+import AddIcon from "@material-ui/icons/AddCircle";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
+import IconButton from "@material-ui/core/IconButton";
+
 // import { withStyles } from "@material-ui/styles";
 
 // import "./styles.scss";
@@ -99,6 +104,10 @@ type SectionType = {
 
 type SectionsType = Array<SectionType>;
 
+enum DisplayOption {
+  Card = "card",
+  List = "list",
+}
 interface CourseCardProps {
   title: string;
   description: string;
@@ -106,16 +115,42 @@ interface CourseCardProps {
   professor: string;
   sectionId: Number;
   sectionInfo: SectionsType;
+  action: string;
+  onOptionChange?: (value: string) => void;
+  onActionClick?: () => void;
+  onRefresh?: () => void;
+  onDelete?: () => void;
+  onAdd?: () => void;
+  display: DisplayOption;
+}
+
+interface ThemeProps {
+  display: DisplayOption;
 }
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    padding: theme.spacing(0),
-    borderRadius: 12,
-    maxWidth: 600,
+  root: ({ display }: ThemeProps) => {
+    const style: any = {
+      padding: theme.spacing(0),
+      borderRadius: 12,
+      maxWidth: 600,
+    };
+    if (display === DisplayOption.List) {
+      style.border = "2px solid #034263";
+    }
+    return style;
   },
-  header: {
-    backgroundColor: "#BAE1FF",
+  header: ({ display }: ThemeProps) => {
+    if (display === DisplayOption.Card) {
+      return {
+        backgroundColor: "#BAE1FF",
+      };
+    }
+
+    return {
+      padding: theme.spacing(0),
+      paddingTop: theme.spacing(1),
+    };
   },
   title: {
     fontWeight: 800,
@@ -125,11 +160,12 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
   },
-  avatar: {
+  avatar: ({ display }: ThemeProps) => ({
     backgroundColor: "#EAEAEA",
     color: "#000",
-    marginRight: theme.spacing(2),
-  },
+    marginRight:
+      display === DisplayOption.Card ? theme.spacing(2) : theme.spacing(0),
+  }),
   professor: {
     display: "flex",
     justifyContent: "space-between",
@@ -139,13 +175,14 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   sectionContainer: {
-    marginBottom: theme.spacing(1),
+    // marginBottom: theme.spacing(1),
   },
   actions: {
     display: "flex",
     justifyContent: "space-between",
   },
   actionButton: {
+    minWidth: 160,
     borderRadius: theme.spacing(0.5),
     backgroundColor: "#034263",
     color: "#FFF",
@@ -154,6 +191,9 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   toggleButton: {
+    "& .MuiToggleButton-root": {
+      minWidth: 80,
+    },
     "& .Mui-selected": {
       backgroundColor: "#034263",
       color: "#FFF",
@@ -167,6 +207,23 @@ const useStyles = makeStyles((theme) => ({
   },
   classLocation: {
     // fontSize: "0.8rem",
+  },
+  listActions: () => ({
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-around",
+    height: "100%",
+    borderLeft: "1px solid rgba(3,66,99,0.1)",
+    paddingLeft: theme.spacing(1.5),
+    paddingRight: theme.spacing(1.5),
+  }),
+  icon: {
+    color: "#034263",
+    fontSize: "2.5rem",
+  },
+  addIcon: {
+    color: "rgba(3,66,99,0.3)",
+    fontSize: "2.5rem",
   },
 }));
 
@@ -189,8 +246,15 @@ export const CourseCard: React.FC<CourseCardProps> = ({
   professor,
   sectionId,
   sectionInfo,
+  action,
+  onOptionChange,
+  onActionClick,
+  onRefresh,
+  onDelete,
+  onAdd,
+  display,
 }) => {
-  const props = {};
+  const props = { display };
   const classes = useStyles(props);
 
   const [gradingOption, setGradingOption] = React.useState<string | null>(
@@ -199,14 +263,15 @@ export const CourseCard: React.FC<CourseCardProps> = ({
 
   const handleAlignment = (
     event: React.MouseEvent<HTMLElement>,
-    newOption: string | null
+    newOption: string
   ) => {
     setGradingOption(newOption);
+    onOptionChange!(newOption);
     event.preventDefault();
   };
 
-  return (
-    <Card className={classes.root}>
+  const CourseFragment = (
+    <React.Fragment>
       <CardContent className={classes.header}>
         <Grid container>
           <Grid item className={classes.avatarContainer}>
@@ -214,7 +279,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({
               {units}
             </Avatar>
           </Grid>
-          <Grid item xs container direction="column" justify="center">
+          <Grid item xs container direction="column" justify="flex-start">
             <Typography
               variant="h6"
               color="textPrimary"
@@ -306,7 +371,15 @@ export const CourseCard: React.FC<CourseCardProps> = ({
             )
           )}
         </Grid>
-        <Box className={classes.actions}>
+      </CardContent>
+    </React.Fragment>
+  );
+
+  const ContentFragment = (
+    <React.Fragment>
+      {CourseFragment}
+      {display === DisplayOption.Card && (
+        <CardContent className={classes.actions}>
           <ToggleButtonGroup
             value={gradingOption}
             exclusive
@@ -329,11 +402,48 @@ export const CourseCard: React.FC<CourseCardProps> = ({
               Letter
             </ToggleButton>
           </ToggleButtonGroup>
-          <Button className={classes.actionButton}>Drop Course</Button>
-        </Box>
-      </CardContent>
-    </Card>
+          <Button onClick={onActionClick} className={classes.actionButton}>
+            {action}
+          </Button>
+        </CardContent>
+      )}
+    </React.Fragment>
   );
+
+  const ListActions = (
+    <React.Fragment>
+      <Box className={classes.listActions}>
+        <IconButton onClick={onRefresh}>
+          <RefreshIcon className={classes.icon}></RefreshIcon>
+        </IconButton>
+        <IconButton onClick={onDelete}>
+          <DeleteIcon className={classes.icon}></DeleteIcon>
+        </IconButton>
+        <IconButton onClick={onAdd}>
+          <AddIcon className={classes.addIcon}></AddIcon>
+        </IconButton>
+      </Box>
+    </React.Fragment>
+  );
+
+  switch (display) {
+    case DisplayOption.List:
+      return (
+        <Card className={classes.root}>
+          <Grid container>
+            <Grid item xs>
+              {ContentFragment}
+            </Grid>
+            <Grid item>
+              {ListActions}
+            </Grid>
+          </Grid>
+        </Card>
+      );
+    case DisplayOption.Card:
+    default:
+      return <Card className={classes.root}>{ContentFragment}</Card>;
+  }
 };
 
 CourseCard.defaultProps = {
@@ -364,4 +474,11 @@ CourseCard.defaultProps = {
       location: "TBA",
     },
   ],
+  action: "Drop Course",
+  onOptionChange: () => {},
+  onActionClick: () => {},
+  onRefresh: () => {},
+  onDelete: () => {},
+  onAdd: () => {},
+  display: DisplayOption.Card,
 };

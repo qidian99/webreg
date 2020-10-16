@@ -7,6 +7,10 @@ declare type SectionType = {
     location: string;
 };
 declare type SectionsType = Array<SectionType>;
+declare enum DisplayOption {
+    Card = "card",
+    List = "list"
+}
 interface CourseCardProps {
     title: string;
     description: string;
@@ -14,6 +18,13 @@ interface CourseCardProps {
     professor: string;
     sectionId: Number;
     sectionInfo: SectionsType;
+    action: string;
+    onOptionChange?: (value: string) => void;
+    onActionClick?: () => void;
+    onRefresh?: () => void;
+    onDelete?: () => void;
+    onAdd?: () => void;
+    display: DisplayOption;
 }
 export declare const CourseCard: React.FC<CourseCardProps>;
 export {};

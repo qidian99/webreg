@@ -15,5 +15,5 @@ export default {
     }
   ],
   plugins: [sass({ insert: true }), typescript()],
-  external: ['react', 'react-dom']
+  external: ['react', 'react-dom', '@material-ui/core', '@material-ui/icons', '@material-ui/lab']
 }
