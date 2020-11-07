@@ -16,7 +16,21 @@
     "strictNullChecks": true,
     "suppressImplicitAnyIndexErrors": true,
     "noUnusedLocals": true,
-    "noUnusedParameters": true
+    "noUnusedParameters": true,
+    "baseUrl": "./src",
+    "paths": {
+      "components": [
+        "./src/components/*"
+      ],
+      "styled": [
+        "./src/styled/index",
+        "./src/styled/*"
+      ],
+      "util": [
+        "./src/util/index",
+        "./src/util/*"
+      ],
+    },
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist", "example", "rollup.config.js"]

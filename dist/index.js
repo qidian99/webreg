@@ -23,6 +23,7 @@ function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'defau
 var React = require('react');
 var core = require('@material-ui/core');
 var styles = require('@material-ui/core/styles');
+require('moment');
 var RefreshIcon = _interopDefault(require('@material-ui/icons/Cached'));
 var DeleteIcon = _interopDefault(require('@material-ui/icons/DeleteForever'));
 var AddIcon = _interopDefault(require('@material-ui/icons/AddCircle'));
@@ -31,7 +32,6 @@ var ToggleButtonGroup = _interopDefault(require('@material-ui/lab/ToggleButtonGr
 var IconButton = _interopDefault(require('@material-ui/core/IconButton'));
 
 var timeStringMap = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
-//# sourceMappingURL=index.js.map
 
 var DisplayOption;
 (function (DisplayOption) {
