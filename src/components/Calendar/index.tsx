@@ -1,5 +1,5 @@
 import * as React from "react";
-// import SmallCourseCard from "./SmallCourseCard";
+import CalendarCourseCard from "components/CalendarCourseCard";
 import {
   CalendarBody,
   CalendarContainer,
@@ -30,7 +30,7 @@ const CALENDAR_TIMES = [
   "10pm",
 ];
 
-const Calendar = () => (
+const Calendar: React.FC<any> = () => (
   <CalendarContainer>
     <CalendarHeader>
       <CalendarHeaderItem time />
@@ -55,7 +55,7 @@ const Calendar = () => (
           <CalendarScheduleItem key={`course-grid-row-${time}`} />
         ))}
         <CalendarCourseContainer>
-          {/* <SmallCourseCard
+          <CalendarCourseCard
             datePrefix="2020-06-06T"
             startTime="09:00"
             endTime="09:50"
@@ -65,7 +65,7 @@ const Calendar = () => (
             location="PCYNH 112"
             focused
           />
-          <SmallCourseCard
+          <CalendarCourseCard
             datePrefix="2020-06-06T"
             startTime="09:00"
             endTime="09:50"
@@ -74,7 +74,7 @@ const Calendar = () => (
             title="CSE 121"
             location="PCYNH 112"
           />
-          <SmallCourseCard
+          <CalendarCourseCard
             datePrefix="2020-06-06T"
             startTime="09:00"
             endTime="09:50"
@@ -83,7 +83,7 @@ const Calendar = () => (
             title="CSE 122"
             location="PCYNH 112"
           />
-          <SmallCourseCard
+          <CalendarCourseCard
             datePrefix="2020-06-06T"
             startTime="14:00"
             endTime="15:20"
@@ -92,7 +92,7 @@ const Calendar = () => (
             title="COGS 10"
             location="WLH 110"
           />
-          <SmallCourseCard
+          <CalendarCourseCard
             datePrefix="2020-06-06T"
             startTime="10:00:00"
             endTime="10:50:00"
@@ -100,7 +100,7 @@ const Calendar = () => (
             type="DI"
             title="CSE 123"
             location="PCYNH 112"
-          /> */}
+          />
         </CalendarCourseContainer>
       </CalendarSchedule>
     </CalendarBody>

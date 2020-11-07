@@ -9,7 +9,7 @@ import {
   Box,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { timeStringMap } from "../util";
+import { timeStringMap } from "../../util";
 
 import RefreshIcon from "@material-ui/icons/Cached";
 import DeleteIcon from "@material-ui/icons/DeleteForever";
@@ -272,7 +272,7 @@ const useStyles = makeStyles((theme) => ({
 //   },
 // })(Button);
 
-export const CourseCard: React.FC<CourseCardProps> = ({
+const CourseCard: React.FC<CourseCardProps> = ({
   title,
   description,
   units,
@@ -354,8 +354,8 @@ export const CourseCard: React.FC<CourseCardProps> = ({
       <CardContent>
         <Box className={classes.professor}>
           <Typography>{professor}</Typography>
-          <Typography component="span">
-            <Typography component="span" color="textSecondary">
+          <Typography component="span" variant="body2">
+            <Typography component="span" variant="body2" color="textSecondary">
               Section ID{" "}
             </Typography>
             {sectionId}
@@ -388,7 +388,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({
                     Array.from(Array(7).keys()).map((index) => (
                       <Typography
                         key={`date-${index}`}
-                        component="span"
+                        component={"span"}
                         style={{
                           marginLeft: 1,
                           color: (time as Array<number>).includes(index)
@@ -402,7 +402,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({
 
                   {!type && (
                     <Typography
-                      component="span"
+                      component={"span"}
                       style={{
                         marginLeft: 1,
                         color: "#034263",
@@ -540,3 +540,6 @@ CourseCard.defaultProps = {
   status: StatusOption.Enrolled,
   statusText: 'Enrolled - Letter',
 };
+
+
+export default CourseCard;

@@ -8,6 +8,15 @@ const {
   default: styled,
 } = require('styled-components');
 
+
+interface CalendarCardProps {
+  focused: Boolean
+}
+
+interface CalendarHeaderItemProps {
+  time: Boolean
+}
+
 /* Components */
 export const CALENDAR_TIME_COL_WIDTH = '35px';
 export const CALENDAR_ROW_HEIGHT = '56px';
@@ -40,7 +49,7 @@ export const CalendarHeaderItem = styled.div`
 font-size: 10px;
 text-align: center;
 letter-spacing: -0.02em;
-${(props) => (
+${(props: CalendarHeaderItemProps) => (
     props.time
       ? `width: ${CALENDAR_TIME_COL_WIDTH};`
       : 'flex: 1;')}
@@ -107,6 +116,7 @@ export const CalendarCardTitle = styled(FlexContainer)`
   font-weight: bold;
 `;
 
+
 export const CalendarCard = styled.div`
   width: 100%;
   height: 100%;
@@ -119,7 +129,7 @@ export const CalendarCard = styled.div`
   overflow: hidden;
   box-sizing: border-box;
 
-  ${(props) => (
+  ${(props: CalendarCardProps) => (
     props.focused
   && `border: 1px solid #034263;
   ${CalendarCardHeader} {
